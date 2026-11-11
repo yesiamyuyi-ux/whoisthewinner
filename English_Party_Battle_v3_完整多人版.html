@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#131d36">
+  <title>English Party Battle｜團隊英語對戰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme:light; --night:#141e36; --ink:#202e46; --muted:#708097; --paper:#faf9f6; --white:#fff; --line:#e5e9f0; --red:#e65b55; --blue:#4a78e8; --gold:#d7a142; --good:#269579; --shadow:0 14px 45px rgba(25,42,79,.075); }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background: radial-gradient(circle at 10% 0%,#eaf0ff 0,transparent 39%),radial-gradient(circle at 98% 17%,#fff2e5 0,transparent 29%),var(--paper); font-family:'Noto Sans TC',system-ui,sans-serif; min-height:100vh; line-height:1.55; }
+    button,input,select { font:inherit; }
+    button { cursor:pointer; }
+    button:disabled { opacity:.43; cursor:not-allowed; transform:none!important; }
+    .topbar { background:var(--night); color:#fff; padding:16px max(18px,calc((100vw - 1200px)/2)); display:flex; align-items:center; justify-content:space-between; gap:14px; box-shadow:0 5px 24px #141e361b; }
+    .logo { display:flex; gap:13px; align-items:center; }
+    .logo-icon { font-size:23px; width:46px; height:46px; display:grid; place-items:center; border-radius:15px; background:linear-gradient(145deg,#ffcd78,#ee776a); box-shadow:inset 0 -4px #00000013; }
+    .logo-title { font:700 19px/1.2 'Space Grotesk',sans-serif; letter-spacing:-.5px; }
+    .logo-sub { font-size:11px; color:#b6c6e0; letter-spacing:.14em; margin-top:4px; }
+    .online { color:#d6e5f8; font-size:12px; display:flex; align-items:center; gap:7px; text-align:right; }
+    .dot { width:8px; height:8px; background:#e2a95d; border-radius:50%; flex-shrink:0; }
+    .dot.ok { background:#65d5aa; }
+    main { max-width:1200px; padding:30px 18px 75px; margin:auto; }
+    .screen { display:none; animation:rise .22s ease both; }
+    .screen.active { display:block; }
+    @keyframes rise { from { opacity:.4; transform:translateY(7px) } to { opacity:1; transform:none } }
+    h1,h2,h3,p { margin:0; }
+    h1 { font-size:clamp(25px,4vw,35px); letter-spacing:-1.3px; font-weight:900; }
+    h2 { font-size:23px; letter-spacing:-.5px; font-weight:900; }
+    h3 { font-size:17px; font-weight:800; }
+    .eyebrow { text-transform:uppercase; font:700 11px 'Space Grotesk',sans-serif; letter-spacing:.21em; color:var(--gold); }
+    .desc { font-size:13px; color:var(--muted); margin-top:7px; }
+    .headerline { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:23px; flex-wrap:wrap; }
+    .panel { background:rgba(255,255,255,.93); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); padding:23px; }
+    .panel + .panel { margin-top:18px; }
+    .muted { color:var(--muted); }
+    .subtle { font-size:12px; color:var(--muted); }
+    .small { font-size:13px; }
+    .flex { display:flex; align-items:center; gap:12px; }
+    .between { display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+    .stack { display:grid; gap:15px; }
+    .pill { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:6px 11px; background:#f1f3f9; color:#566785; font-size:12px; font-weight:800; white-space:nowrap; }
+    .pill.red { background:#fff0ed; color:#cb5048; }
+    .pill.blue { background:#ecf1ff; color:#446ad3; }
+    .pill.green { background:#e9f8f2; color:#188969; }
+    .pill.gold { background:#fff3d8; color:#916319; }
+    .btn { border:none; border-radius:12px; min-height:43px; padding:10px 17px; background:#eef1f7; color:var(--ink); font-weight:800; transition:transform .12s ease,background .12s ease; }
+    .btn:not(:disabled):hover { transform:translateY(-2px); background:#e2e8f2; }
+    .btn.primary { background:var(--night); color:white; }
+    .btn.primary:not(:disabled):hover { background:#2d4068; }
+    .btn.rose { background:var(--red); color:white; }
+    .btn.rose:not(:disabled):hover { background:#d94542; }
+    .btn.azure { background:var(--blue); color:white; }
+    .btn.azure:not(:disabled):hover { background:#3866d6; }
+    .btn.green { background:var(--good); color:#fff; }
+    .btn.gold { background:#f5ddac; color:#624519; }
+    .btn.ghost { background:white; border:1px solid var(--line); }
+    .btn.danger { background:#fff0ee; color:#d04a47; }
+    .btn.xs { padding:6px 11px; min-height:29px; border-radius:9px; font-size:12px; }
+    .btn.sm { min-height:37px; padding:8px 13px; font-size:13px; }
+    .btn.full { width:100%; }
+    input,select { background:#fff; border:1.5px solid #dce2eb; border-radius:12px; min-height:47px; padding:11px 13px; width:100%; outline:none; color:var(--ink); }
+    input:focus,select:focus { border-color:#6d8fe9; box-shadow:0 0 0 3px #4a78e81b; }
+    label.field { display:grid; gap:7px; font-size:13px; font-weight:800; }
+    .login-wrap { max-width:990px; margin:30px auto 0; display:grid; grid-template-columns:1fr .88fr; gap:22px; align-items:stretch; }
+    .hero { border-radius:24px; min-height:445px; padding:46px 40px; position:relative; background:linear-gradient(148deg,#172541,#31426e); color:#fff; overflow:hidden; }
+    .hero:before,.hero:after { content:''; position:absolute; border:1px solid #ffffff28; width:320px; height:320px; border-radius:50%; right:-110px; bottom:-130px; }
+    .hero:after { right:-47px; bottom:-166px; width:235px; height:235px; }
+    .hero h1 { font-size:clamp(30px,5vw,46px); line-height:1.23; margin-top:22px; }
+    .hero p { color:#cbd6ea; line-height:1.9; margin-top:23px; max-width:400px; }
+    .hero-cards { margin-top:48px; display:flex; gap:12px; transform:rotate(-5deg); }
+    .mini-card { width:115px; height:138px; background:#fff; border:6px solid #fff; border-radius:15px; color:#1a2b47; padding:15px 10px; box-shadow:0 10px 20px #0002; display:grid; align-content:center; justify-items:center; text-align:center; gap:8px; font-weight:800; }
+    .mini-card:nth-child(2) { transform:translateY(-18px) rotate(9deg); }
+    .mini-card:nth-child(3) { transform:rotate(6deg); }
+    .mini-card .emoji { font-size:33px; }
+    .login-form { display:grid; gap:17px; padding:36px; }
+    .login-form h2 { margin-bottom:2px; }
+    .mini-tip { padding:13px 15px; border-radius:11px; background:#f5f7fb; color:#62738b; font-size:12px; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .team-panel { border:1px solid #e8ecf4; background:#fff; border-radius:20px; padding:21px; min-width:0; }
+    .team-panel.left { border-top:5px solid var(--red); }
+    .team-panel.right { border-top:5px solid var(--blue); }
+    .team-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .team-name { font-weight:900; font-size:20px; }
+    .team-symbol { display:inline-grid; width:35px; height:35px; place-items:center; background:#f3f5fa; border-radius:11px; margin-right:8px; font-size:18px; }
+    .player { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 0; border-bottom:1px solid #f0f2f5; min-height:58px; }
+    .player:last-child { border-bottom:0; }
+    .player-name { font-weight:700; overflow-wrap:anywhere; font-size:14px; }
+    .player-note { color:var(--muted); font-size:11px; margin-top:2px; }
+    .player-buttons { display:flex; gap:5px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .host-badge { display:flex; align-items:center; gap:16px; border-radius:16px; background:#f5f6fa; padding:18px 20px; }
+    .host-avatar { background:#ffeed0; width:50px; height:50px; display:grid; place-items:center; border-radius:15px; font-size:23px; }
+    .progress { background:#eceef3; height:8px; border-radius:999px; overflow:hidden; margin:10px 0 6px; }
+    .progress > span { display:block; height:100%; background:linear-gradient(90deg,#6d89d9,#5dbfa6); border-radius:999px; transition:width .22s; }
+    .control-row { display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-top:15px; }
+    .divider { height:1px; background:var(--line); margin:20px 0; }
+    .warning { background:#fff8e7; color:#7f6329; border:1px solid #f3dfad; border-radius:14px; padding:12px 14px; font-size:13px; }
+    .selection-layout { display:grid; grid-template-columns:1.3fr .7fr; gap:18px; align-items:start; }
+    .card-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:11px; }
+    .skill-card { text-align:left; border:1.5px solid #e6e8f0; background:white; border-radius:16px; min-height:142px; padding:16px 13px; display:grid; align-content:start; gap:8px; position:relative; box-shadow:0 4px 10px #1a2e4809; width:100%; }
+    .skill-card:hover:not(:disabled) { border-color:#9baee5; transform:translateY(-2px); }
+    .skill-card.selected { border:2px solid var(--blue); box-shadow:0 0 0 3px #4a78e820; background:#f6f8ff; }
+    .skill-card.disabled-card { opacity:.4; }
+    .skill-card .icon { font-size:29px; line-height:1; }
+    .skill-card .card-name { font-size:14px; font-weight:900; }
+    .skill-card .card-desc { font-size:11px; color:#6b7890; line-height:1.55; }
+    .skill-card .check { position:absolute; top:8px; right:9px; color:var(--blue); font-weight:900; }
+    .selection-preview { display:grid; gap:9px; margin:14px 0 20px; }
+    .choice-row { display:flex; align-items:center; gap:9px; background:#f6f7fa; border-radius:12px; padding:11px 12px; font-size:13px; font-weight:700; }
+    .choice-number { font:700 13px 'Space Grotesk',sans-serif; color:var(--gold); }
+    .battle-board { display:grid; grid-template-columns:1fr 250px 1fr; gap:14px; align-items:stretch; margin-bottom:18px; }
+    .battle-team { background:#fff; border-radius:20px; border:1px solid var(--line); padding:19px; min-width:0; }
+    .battle-team.left { border-top:5px solid var(--red); }
+    .battle-team.right { border-top:5px solid var(--blue); }
+    .battle-center { background:var(--night); border-radius:20px; color:white; display:grid; align-content:center; justify-items:center; gap:8px; padding:25px 12px; text-align:center; }
+    .battle-center .vs { font:700 37px 'Space Grotesk',sans-serif; color:#f5bc65; }
+    .hp-number { font:700 44px 'Space Grotesk',sans-serif; line-height:1; letter-spacing:-2px; }
+    .heart { color:#f16a62; font-size:20px; vertical-align:middle; }
+    .hp-caption { font-size:11px; color:var(--muted); font-weight:700; }
+    .card-line { display:flex; flex-wrap:wrap; gap:7px; margin-top:13px; }
+    .card-chip { display:inline-flex; gap:5px; align-items:center; background:#f4f5f9; padding:7px 9px; border-radius:9px; font-size:11px; font-weight:800; }
+    .card-chip.secret { background:#fff0d8; color:#946524; }
+    .action-area { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; align-items:start; }
+    .answer-options,.reward-options { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:15px; }
+    .reward-options { grid-template-columns:repeat(3,1fr); }
+    .option { display:grid; place-items:center; text-align:center; gap:5px; border:1.5px solid var(--line); border-radius:13px; padding:15px 8px; font-weight:900; color:#263853; background:white; min-height:72px; }
+    .option.selected { border-color:#536fd0; background:#edf1ff; color:#3c5ec3; }
+    .option .big { font-size:22px; }
+    .poll-grid { display:grid; gap:8px; margin-top:14px; }
+    .poll-row { display:grid; grid-template-columns:80px 1fr 42px; gap:10px; align-items:center; font-size:13px; font-weight:800; }
+    .poll-track { background:#f0f2f7; height:10px; border-radius:50px; overflow:hidden; }
+    .poll-track span { display:block; background:#7290da; height:100%; border-radius:50px; transition:width .2s; }
+    .feed { list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+    .feed li { font-size:12px; line-height:1.6; padding:8px 10px; border-left:3px solid #eac58c; background:#f7f8fb; border-radius:4px 9px 9px 4px; }
+    .empty { padding:26px 12px; text-align:center; color:var(--muted); background:#f7f8fc; border-radius:12px; font-size:13px; }
+    .controls-inline { display:flex; gap:9px; flex-wrap:wrap; }
+    .toast-box { position:fixed; z-index:99; top:18px; right:18px; max-width:min(420px,calc(100vw - 30px)); display:grid; gap:8px; pointer-events:none; }
+    .toast { border-radius:13px; background:#243656; padding:12px 15px; color:white; box-shadow:0 12px 32px #0003; font-size:13px; animation:rise .16s; }
+    .toast.error { background:#c64343; }
+    .toast.good { background:#247b62; }
+    dialog { border:0; border-radius:22px; padding:0; max-width:min(440px,calc(100vw - 28px)); box-shadow:0 25px 90px #0005; }
+    dialog::backdrop { background:#13234199; }
+    .dialog-inner { padding:28px; }
+    .dialog-inner h3 { font-size:21px; }
+    .dialog-inner p { margin-top:11px; color:var(--muted); font-size:13px; line-height:1.9; }
+    .dialog-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:24px; }
+    .footnote { max-width:1200px; padding:8px 18px 26px; margin:auto; text-align:center; font-size:11px; color:#9aa6b6; }
+    @media(max-width:950px) { .login-wrap { grid-template-columns:1fr; } .hero { min-height:290px; } .hero-cards { margin-top:24px; } .battle-board { grid-template-columns:1fr 180px 1fr; } .selection-layout { grid-template-columns:1fr; } }
+    @media(max-width:650px) { main { padding:21px 11px 50px; } .topbar { padding:12px 14px; } .logo-sub { display:none; } .logo-title { font-size:16px; } .online { max-width:140px; font-size:10px; } .panel { padding:16px; border-radius:17px; } .hero { padding:27px; min-height:310px; } .login-form { padding:24px; } .two-col { grid-template-columns:1fr; gap:12px; } .battle-board { grid-template-columns:1fr 1fr; gap:8px; } .battle-center { grid-column:1/-1; grid-row:1; min-height:92px; } .battle-center .vs { font-size:21px; } .battle-team { padding:12px; } .hp-number { font-size:34px; } .action-area { grid-template-columns:1fr; } .card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .skill-card { min-height:129px; padding:12px 10px; } .answer-options { gap:7px; } .reward-options { grid-template-columns:1fr; } .option { min-height:58px; } .player { flex-wrap:wrap; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+
+    /* v3 • cards, polls, responsive battle */
+    .choice-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:12px 0; }
+    .choice-grid .option { min-height:66px; overflow-wrap:anywhere; }
+    .choice-grid .option.small-opt { padding:13px; font-size:13px; min-height:61px; }
+    .heart-big { font:800 clamp(32px,4vw,50px) 'Space Grotesk',sans-serif; margin:12px 0 4px; letter-spacing:-2px; }
+    .heart-big span { color:#ea6b66; font-size:26px; }
+    .chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+    .skill-chip,.secret-chip { display:inline-flex; align-items:center; gap:5px; background:#f2f5fb; color:#52627a; border:1px solid #e9edf4; border-radius:10px; font-weight:800; font-size:11px; line-height:1.4; padding:8px 10px; overflow-wrap:anywhere; }
+    .skill-chip small { font-size:9px; color:#1b7f66; font-weight:800; }
+    .secret-chip { background:#fff8e9; color:#9b6d29; border-color:#f2e4c0; }
+    .secret-chip.used { background:#eff9f3; color:#2e8a68; border-color:#d6f0de; }
+    .option-choices { background:#f4f6fc; border-radius:12px; padding:13px; margin-top:10px; display:grid; gap:7px; font-size:13px; }
+    .option-choices > div { border-bottom:1px solid #e5e9f1; padding:4px 0; }
+    .option-choices > div:last-child { border:0; }
+    #action-content { min-height:170px; }
+    #poll-seconds { max-width:190px; }
+    .card-grid .skill-card { background:linear-gradient(145deg,#fff 64%,#f6f8ff); }
+    .panel { backdrop-filter:blur(6px); }
+    .battle-team.left { background:linear-gradient(160deg,#fff,#fff7f6); }
+    .battle-team.right { background:linear-gradient(160deg,#fff,#f5f8ff); }
+    .battle-center { background:linear-gradient(160deg,#1a2744,#263b67); }
+    button:focus-visible { outline:3px solid #efb764; outline-offset:2px; }
+    input[hidden],button[hidden] { display:none!important; }
+    @media(max-width:650px){.choice-grid {grid-template-columns:1fr 1fr;gap:8px}.choice-grid .option {padding:9px 5px;min-height:56px}.heart-big{font-size:32px}.skill-chip,.secret-chip{font-size:10px}.login-wrap{margin-top:8px}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo"><div class="logo-icon">⚔️</div><div><div class="logo-title">English Party Battle</div><div class="logo-sub">PLAY • THINK • TEAM UP</div></div></div>
+    <div class="online"><span class="dot" id="connection-dot"></span><span id="connection-status">連接遊戲服務中…</span></div>
+  </div>
+  <main>
+    <section class="screen active" id="screen-login">
+      <div class="login-wrap">
+        <div class="hero"><div class="eyebrow">English × Strategy × Teamwork</div><h1>用英文迎戰，<br>用策略翻盤。</h1><p>雙隊對戰・卡牌技能・全員投票<br>讓每一個人的選擇都影響戰局。</p><div class="hero-cards"><div class="mini-card"><span class="emoji">🧪</span>女巫的毒藥</div><div class="mini-card"><span class="emoji">🛡️</span>金鐘罩</div><div class="mini-card"><span class="emoji">🎭</span>鏡花水月</div></div></div>
+        <div class="panel login-form"><div><div class="eyebrow">READY TO PLAY?</div><h2 style="margin-top:8px">開啟你的對戰</h2><p class="desc">主持人建立房間；玩家輸入相同房號加入。</p></div><label class="field">你的暱稱 <input id="input-name" maxlength="10" placeholder="例如：英文小隊長" autocomplete="nickname"></label><label class="field">四位數房間號碼 <input id="input-room" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="加入請輸入；建立可留空隨機產生"></label><div class="stack"><button class="btn primary full" data-action="create">✦ 建立房間（主持人）</button><button class="btn ghost full" data-action="join">以隊員身分加入 →</button></div><div class="mini-tip">無須註冊或輸入帳密，背景匿名驗證會自動完成。不同玩家建議各用自己的裝置。</div><p class="subtle" id="setup-hint">準備背景連線中…</p><button class="btn ghost sm" id="retry-auth" data-action="retry-auth" hidden>重新連線</button></div>
+      </div>
+    </section>
+    <section class="screen" id="screen-lobby">
+      <div class="headerline"><div><div class="eyebrow">ROOM LOBBY</div><h1>集合！準備開戰</h1><div class="desc">加入隊伍、指定隊長，所有隊員準備後才能開始。</div></div><div class="controls-inline"><span class="pill gold" id="room-label">ROOM ----</span><button class="btn ghost sm" data-action="copy-room">複製房號</button></div></div>
+      <div class="panel"><div class="between"><h3>🎙 主持人（獨立身分）</h3><span class="pill gold">HOST</span></div><div class="host-badge" style="margin-top:15px"><div class="host-avatar">🎤</div><div><div style="font-weight:900" id="host-name">—</div><div class="subtle">主持與裁定，不加入任何隊伍</div></div></div></div>
+      <div class="two-col" style="margin-top:18px"><div class="team-panel left" id="lobby-left"></div><div class="team-panel right" id="lobby-right"></div></div>
+      <div class="panel" id="unassigned-panel" style="display:none;margin-top:18px"><h3>🧭 尚未分隊的成員</h3><div id="unassigned-list"></div></div>
+      <div class="panel" style="margin-top:18px"><div class="between"><div><h3>準備進度</h3><p class="subtle" id="ready-copy">等待隊員加入…</p></div><span class="pill" id="ready-pill">0 / 0 準備</span></div><div class="progress"><span id="ready-progress" style="width:0%"></span></div><div id="lobby-warning" class="warning" style="margin-top:13px">請兩隊先各安排至少一位成員。</div><div class="control-row" id="lobby-controls"></div></div>
+    </section>
+    <section class="screen" id="screen-select">
+      <div class="headerline"><div><div class="eyebrow" id="select-step">CARD DRAFT · STEP 01 / 02</div><h1 id="select-title">選擇公開卡</h1><p class="desc" id="select-desc">先由全隊票選三張公開卡，再獨立投票選擇一張秘密底牌。</p></div><span class="pill gold" id="select-room-label">ROOM ----</span></div>
+      <div class="selection-layout"><div class="panel"><div class="between"><h3>卡牌資料庫</h3><span class="pill blue" id="select-counter">0 / 3</span></div><p class="desc" style="margin-bottom:17px">每位隊員各自投票，投票平手時由隊長決定。</p><div class="card-grid" id="select-cards"></div></div><div class="panel"><h3>🃏 我們的牌組</h3><div id="select-preview" class="selection-preview"></div><div id="select-status-box" class="warning">等待兩隊選牌。</div><div class="control-row" id="select-controls"></div><div class="divider"></div><h3>雙方進度</h3><div class="stack" style="gap:12px;margin-top:12px" id="select-team-progress"></div><div class="mini-tip" style="margin-top:18px">底牌獨立保存在限制存取的資料節點，只有本隊和主持人能讀取。對手在底牌尚未發動／觸發前只能看到「？」。</div></div></div>
+      <div class="panel" id="select-roster" style="display:none;margin-top:18px"><h3>🎙 主持人管理玩家</h3><div class="two-col" style="margin-top:15px"><div class="team-panel left" id="select-manage-left"></div><div class="team-panel right" id="select-manage-right"></div></div></div>
+    </section>
+    <section class="screen" id="screen-game">
+      <div class="headerline"><div><div class="eyebrow">BATTLE ARENA</div><h1 id="game-heading">正式對戰</h1><p class="desc" id="game-description">等待下一題。</p></div><div class="controls-inline"><span class="pill gold" id="game-room-label">ROOM ----</span><span class="pill" id="game-round">ROUND 01</span></div></div>
+      <div class="battle-board"><div class="battle-team left" id="battle-left"></div><div class="battle-center"><span class="subtle" style="color:#b7c6dd">NOW PLAYING</span><strong id="battle-turn">左隊</strong><div class="vs">VS</div><span class="pill gold" id="battle-phase">回合準備</span></div><div class="battle-team right" id="battle-right"></div></div>
+      <div class="action-area"><div class="panel"><div class="between"><h2 id="action-title">本回合操作</h2><span class="pill" id="action-role">隊員</span></div><div id="action-content" style="margin-top:17px"></div></div><div class="panel"><h3>🎙 主持資訊與戰況</h3><div class="mini-tip" id="host-note" style="margin-top:13px">請依畫面流程進行遊戲。</div><div class="divider"></div><h3>最新戰況</h3><ul class="feed" id="battle-history" style="margin-top:13px"><li>準備開始</li></ul><div class="control-row" id="game-extras"></div></div></div>
+      <div class="panel" id="game-roster" style="display:none;margin-top:18px"><h3>🎙 主持人管理玩家</h3><p class="desc">可指派中途加入的玩家、重新指定隊長或踢除玩家；隊長斷線約 5 秒會自動順位遞補。</p><div class="two-col" style="margin-top:15px"><div class="team-panel left" id="manage-left"></div><div class="team-panel right" id="manage-right"></div></div></div>
+    </section>
+  </main>
+  <div class="footnote">ENGLISH PARTY BATTLE · v3 全員投票完整版 · 使用 HTTPS 網址 · 匿名身分自動建立</div>
+  <div id="toasts" class="toast-box" role="status" aria-live="polite"></div>
+  <dialog id="confirm-dialog"><div class="dialog-inner"><h3 id="dialog-title">請再次確認</h3><p id="dialog-copy"></p><div class="dialog-actions"><button class="btn ghost" id="dialog-cancel">取消</button><button class="btn rose" id="dialog-ok">確認</button></div></div></dialog>
+<script type="module">
+// English Party Battle · 2026 / 全員投票版
+// Firebase Auth 在背景識別裝置，不提供或要求玩家輸入帳密。
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js';
+import {getAuth,signInAnonymously,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js';
+import {getDatabase,ref,get,set,update,remove,onValue,onDisconnect,runTransaction,serverTimestamp} from 'https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js';
+const firebaseConfig={apiKey:'AIzaSyC5GOWxzm3JtaMqRmaZYjkJiq59CIQ_ogk',authDomain:'whoisthewinner.firebaseapp.com',databaseURL:'https://whoisthewinner-default-rtdb.firebaseio.com',projectId:'whoisthewinner',storageBucket:'whoisthewinner.firebasestorage.app',messagingSenderId:'444059736442',appId:'1:444059736442:web:b2e349c0b8ad4a37f7dec3',measurementId:'G-WG6NCVMWNW'};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const CARDS=[
+{id:'c1',name:'禁言',icon:'🔇',desc:'投票指定對方一人，兩整輪不得答題；其他投票不受影響。',kind:'instant-target'},
+{id:'c2',name:'女巫的毒藥',icon:'🧪',desc:'答對敵方 −2 命；答錯己方 −1 命，卡保留。',kind:'answer'},
+{id:'c3',name:'女巫的解藥',icon:'💚',desc:'答對己方 +2 命；答錯不扣命，卡保留。',kind:'answer'},
+{id:'c4',name:'話吉玩',icon:'☎️',desc:'立即消耗，主持人提供一項提示後照常作答。',kind:'hint'},
+{id:'c5',name:'迴光返照',icon:'🌟',desc:'被動：生命歸零時自動消耗一張，生命恢復至 1。',kind:'passive'},
+{id:'c6',name:'鏡花水月',icon:'🎭',desc:'立即消耗：對手強制連答兩題，每題對 +1／錯 −1。',kind:'mirror'},
+{id:'c7',name:'對賭協議',icon:'🎲',desc:'雙方各押 1 命；答對發動方拿兩份，答錯雙方各 −1。',kind:'answer'},
+{id:'c8',name:'神偷怪盜',icon:'🕵️',desc:'立即隨機偷取對手一張公開卡；沒牌可偷不消耗。',kind:'steal'},
+{id:'c9',name:'背水一戰',icon:'🔥',desc:'答對己方 −2，敵方 −3；答錯己方 −1。',kind:'answer'},
+{id:'c10',name:'釘孤支',icon:'⚔️',desc:'全隊指定雙方代表，以同題的正確性與伺服器記錄速度決勝。',kind:'duel'},
+{id:'c11',name:'金鐘罩',icon:'🛡️',desc:'立即架盾：50% 無效、12.5% 反彈、37.5% 免疫。',kind:'shield'}
+];
+const C=Object.fromEntries(CARDS.map(c=>[c.id,c]));
+const REWARDS=[{id:'heal',label:'💗 己方補 1 命'},{id:'attack',label:'⚔️ 敵方扣 1 命'},{id:'streak',label:'⚡ 挑戰三題連答'}];
+const SIDES=['left','right'],SIDE={left:'左隊',right:'右隊'};
+const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cp=x=>JSON.parse(JSON.stringify(x));const vals=o=>Object.values(o||{});const ents=o=>Object.entries(o||{});const foe=s=>s==='left'?'right':'left';
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];const token=()=>`k${Date.now().toString(36)}${Math.random().toString(36).slice(2,8)}`;
+let S={uid:'',room:'',meta:null,members:{},presence:{},captains:{},teamNames:{},battle:null,poll:null,ballots:{},ties:{},private:{},duelAnswers:{},loaded:false};
+let subs=[],pollSubs=[],presenceSub=null,privateSubs=[],privateFor='',offlineSince={},authReady=false,working=false,hostBusy=false,autoAgain=false,localPick={},localMulti={},questionDraft={};
+const roomPath=p=>`rooms/${S.room}${p?'/'+p:''}`;const R=p=>ref(db,roomPath(p));
+const isHost=()=>Boolean(S.uid&&S.meta?.hostId===S.uid);const teamOf=uid=>S.members?.[uid]?.team||'';const myTeam=()=>teamOf(S.uid);const isCaptain=(s=myTeam())=>Boolean(s&&S.captains?.[s]===S.uid);
+const nameOf=uid=>S.members?.[uid]?.name||'已離線玩家';const teamName=s=>S.teamNames?.[s]||SIDE[s]||'未分隊';
+const members=s=>ents(S.members).filter(([id,m])=>m.team===s).sort((a,b)=>(a[1].teamJoinedAt||a[1].joinedAt||0)-(b[1].teamJoinedAt||b[1].joinedAt||0)).map(([id,m])=>({uid:id,...m}));
+const present=uid=>S.presence?.[uid]===true;const eligiblePresent=uid=>present(uid)||(offlineSince[uid]&&Date.now()-offlineSince[uid]<5000);
+const eligibleIds=poll=>Object.keys(poll?.eligible||{}).filter(uid=>S.members?.[uid]&&eligiblePresent(uid));
+const currentSide=()=>S.battle?.turn||'left';const currentPoll=()=>S.poll&&S.poll.id===S.battle?.pollId?S.poll:null;
+function say(msg,type=''){let el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;$('toasts').append(el);setTimeout(()=>el.remove(),5200)}
+function error(e,context='操作失敗'){console.error(context,e);say(`${context}：${e?.message||e?.code||'未知錯誤'}`,'error')}
+function show(which){document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id===`screen-${which}`));}
+function confirmUI(title,body,yes='確認'){return new Promise(resolve=>{const d=$('confirm-dialog'),ok=$('dialog-ok'),no=$('dialog-cancel');$('dialog-title').textContent=title;$('dialog-copy').textContent=body;ok.textContent=yes;let fin=x=>{d.close();ok.removeEventListener('click',go);no.removeEventListener('click',stop);d.removeEventListener('cancel',cancel);resolve(x)};let go=()=>fin(true),stop=()=>fin(false),cancel=e=>{e.preventDefault();fin(false)};ok.addEventListener('click',go);no.addEventListener('click',stop);d.addEventListener('cancel',cancel);d.showModal()})}
+async function ensureAuth(){if(auth.currentUser)return auth.currentUser;try{return (await signInAnonymously(auth)).user}catch(e){let guidance=e?.code==='auth/operation-not-allowed'?'Firebase 控制台 → Authentication → Sign-in method → 啟用「Anonymous 匿名」。':e?.code==='auth/unauthorized-domain'?'請在 Firebase Authentication 的授權網域加入目前網站網址。':'請確認網站透過 HTTPS 開啟、網路正常及 Firebase 專案設定。';$('setup-hint').textContent=`背景識別失敗（${e.code||'未知'}）：${guidance} 設定後按「重試連線」。`;$('retry-auth').hidden=false;throw new Error(guidance)}}
+function saveSession(){localStorage.setItem('epb-next-session',JSON.stringify({room:S.room,name:$('input-name').value.trim()}))}
+function unsubscribeAll(){subs.forEach(f=>{try{f()}catch{}});subs=[];pollSubs.forEach(f=>{try{f()}catch{}});pollSubs=[];privateSubs.forEach(f=>{try{f()}catch{}});privateSubs=[];if(presenceSub)presenceSub();presenceSub=null;privateFor='';}
+function dropLocal(note='已返回首頁'){const room=S.room;unsubscribeAll();localStorage.removeItem('epb-next-session');S={uid:auth.currentUser?.uid||'',room:'',meta:null,members:{},presence:{},captains:{},teamNames:{},battle:null,poll:null,ballots:{},ties:{},private:{},duelAnswers:{},loaded:false};offlineSince={};localPick={};localMulti={};$('input-room').value=room;show('login');say(note)}
+async function enter(create){if(working)return;working=true;try{const u=await ensureAuth(),name=$('input-name').value.trim();if(!name||name.length>10)throw Error('請填入 1～10 字暱稱');let code=$('input-room').value.trim();if(create&&!code)code=String(Math.floor(1000+Math.random()*9000));if(!/^\d{4}$/.test(code))throw Error('請輸入四位數房號');let metaRef=ref(db,`rooms/${code}/meta`);
+ if(create){let made=await runTransaction(metaRef,cur=>cur?undefined:{hostId:u.uid,hostName:name,status:'lobby',pollSeconds:60,createdAt:Date.now(),version:2},{applyLocally:false});if(!made.committed)throw Error('房號已存在，請更換房號');}
+ else{let m=(await get(metaRef)).val();if(!m)throw Error('房間不存在');if(m.hostId===u.uid)throw Error('你已是這間房間的主持人，請重新整理恢復');}
+ const memRef=ref(db,`rooms/${code}/members/${u.uid}`);const old=(await get(memRef)).val();if(!old||create||!['playing','finished','draftPublic','draftSecret','readyToPlay'].includes((await get(metaRef)).val()?.status))await set(memRef,{name,team:old?.team||'',ready:false,joinedAt:old?.joinedAt||Date.now()});S.room=code;S.uid=u.uid;S.members={[u.uid]:{name,team:old?.team||'',ready:false}};$('input-room').value=code;saveSession();listenRoom();say(create?'房間建立成功':'已加入房間','good');
+ }catch(e){error(e,'無法進入房間')}finally{working=false}}
+async function restoreSession(){const saved=JSON.parse(localStorage.getItem('epb-next-session')||'null');if(!saved?.room||!auth.currentUser||S.room)return;try{const m=(await get(ref(db,`rooms/${saved.room}/meta`))).val();const p=(await get(ref(db,`rooms/${saved.room}/members/${auth.currentUser.uid}`))).val();if(!m||!p)throw Error('已離開');S.room=saved.room;S.uid=auth.currentUser.uid;S.meta=m;S.members={[S.uid]:p};$('input-name').value=saved.name||p.name;$('input-room').value=saved.room;listenRoom();say('已恢復先前房間','good')}catch{localStorage.removeItem('epb-next-session')}}
+function subscribe(path,key){const off=onValue(R(path),sn=>{if(!S.room)return;const old=S[key];S[key]=sn.val()??(key==='battle'?null:{});if(key==='meta'&&!sn.exists()){dropLocal('主持人已解散房間');return}if(key==='members'){if(S.loaded&&!S.members[S.uid]){dropLocal('你已退出，或被主持人移出');return}S.loaded=true;syncPrivate();syncPoll()}
+ if(key==='presence'){const t=Date.now();for(const uid of Object.keys({...old,...S.presence}))if(!present(uid)&&!offlineSince[uid])offlineSince[uid]=t;else if(present(uid))delete offlineSince[uid];}
+ if(key==='meta')syncPrivate();if(key==='battle')syncPoll();render();scheduleHost();},e=>{if(key==='members'){dropLocal('你已失去房間存取權')}else error(e,`${path} 同步失敗`) });subs.push(off)}
+function listenRoom(){unsubscribeAll();S.loaded=false;for(const [path,key] of [['meta','meta'],['members','members'],['presence','presence'],['captains','captains'],['teamNames','teamNames'],['battle','battle']])subscribe(path,key);
+ const code=S.room;presenceSub=onValue(ref(db,'.info/connected'),async sn=>{if(!sn.val()||S.room!==code)return;try{const p=R(`presence/${S.uid}`);await onDisconnect(p).remove();await set(p,true)}catch(e){error(e,'在線狀態更新失敗')}});syncPrivate();syncPoll();render()}
+function syncPrivate(){let desired=isHost()?'host':myTeam();if(desired===privateFor)return;privateSubs.forEach(f=>f());privateSubs=[];privateFor=desired;S.private={};if(!desired)return;for(const side of desired==='host'?SIDES:[desired])privateSubs.push(onValue(R(`private/${side}`),sn=>{S.private[side]=sn.val()||null;render();scheduleHost()},e=>error(e,'底牌資料同步失敗')))}
+function syncPoll(){const id=S.battle?.pollId;const access=(isHost()||myTeam()===S.battle?.pollTeam||['duelReady','duelAnswer','duelJudge'].includes(S.battle?.phase)&&Boolean(myTeam()));const watchKey=id+'|'+access;if(S._pollWatch===watchKey)return;pollSubs.forEach(f=>f());pollSubs=[];S._pollWatch=watchKey;S.poll=null;S.ballots={};S.ties={};S.duelAnswers={};if(!id||!access)return;
+ pollSubs.push(onValue(R(`polls/${id}`),sn=>{S.poll=sn.val()?{id,...sn.val()}:null;render();scheduleHost()},e=>error(e,'投票資料讀取失敗')));
+ // 各隊只能讀自己的投票；秘密投票另外位於受限制的節點。
+ const addBallot=secret=>{const path=`${secret?'secretBallots':'ballots'}/${id}`;pollSubs.push(onValue(R(path),sn=>{S.ballots=sn.val()||{};render();scheduleHost()},e=>{if(isHost()||myTeam()===S.poll?.team)error(e,'投票讀取失敗')}))};
+ // 等取得 poll metadata 後才訂閱權限正確的路徑。
+ let ballotOff=null,kindOff=null;
+ pollSubs.push(onValue(R(`polls/${id}`),sn=>{const p=sn.val();if(ballotOff){ballotOff();ballotOff=null}if(kindOff){kindOff();kindOff=null}S.ballots={};S.duelAnswers={};if(!p)return;const allowed=isHost()||myTeam()===p.team||p.kind==='sudden'&&SIDES.includes(myTeam())||p.kind==='duel'&&SIDES.includes(myTeam());
+ if(allowed){let path=`${p.kind==='draftSecret'?'secretBallots':'ballots'}/${id}`;ballotOff=onValue(R(path),snap=>{S.ballots=snap.val()||{};render();scheduleHost()},e=>error(e,'投票同步失敗'));if(p.kind==='duel'){if(isHost())kindOff=onValue(R(`duelAnswers/${id}`),snap=>{S.duelAnswers=snap.val()||{};render();scheduleHost()},e=>error(e,'搶答同步失敗'));else kindOff=onValue(R(`duelAnswers/${id}/${S.uid}`),snap=>{S.duelAnswers=snap.val()?{[S.uid]:snap.val()}:{};render()},()=>{});} }
+ },e=>error(e,'票匣同步失敗')));
+ pollSubs.push(()=>{if(ballotOff)ballotOff();if(kindOff)kindOff()});
+ pollSubs.push(onValue(R(`tieChoices/${id}`),sn=>{S.ties=sn.val()||{};render();scheduleHost()},()=>{}));
+}
+function render(){if(!S.room)return;$('connection-dot').classList.add('ok');$('connection-status').textContent='遊戲服務已連線';const status=S.meta?.status||'lobby';if(status==='lobby'){show('lobby');renderLobby()}else if(status==='draftPublic'||status==='draftSecret'||status==='readyToPlay'){show('select');renderSelection()}else{show('game');renderBattle()}}
+function effectiveVotes(p=S.poll){const ids=eligibleIds(p);let v=Object.fromEntries(ids.filter(id=>S.ballots[id]!==undefined).map(id=>[id,S.ballots[id]]));return {ids,v,cast:Object.keys(v).length,done:ids.length>0&&Object.keys(v).length===ids.length}}
+function pollOptions(p=S.poll){if(!p)return[];return (p.options||[]).map(o=>typeof o==='string'?{id:o,label:optionLabel(o,p)}:(o.id==='secret'?{...o,label:optionLabel('secret',p)}:o))}
+function optionLabel(k,p){if(k==='none')return '不使用技能卡';if(k==='secret')return isHost()||myTeam()===p?.team?`🂠 秘密底牌・${C[S.private[p.team]?.card]?.name||'尚未取得'}`:'🂠 秘密底牌';if(C[k])return `${C[k].icon} ${C[k].name}`;let item=S.battle?.teams?.[p?.team]?.public?.find(x=>x.key===k);if(item)return `${C[item.card]?.icon||'🃏'} ${C[item.card]?.name||item.card}`;if(REWARDS.find(x=>x.id===k))return REWARDS.find(x=>x.id===k).label;if(k==='yes')return '💚 願意借命';if(k==='no')return '🩸 不借命';if(k.includes('|'))return k.split('|').map(uid=>nameOf(uid)).join(' 對戰 ');if(S.members[k])return nameOf(k);return k;}
+function showCount(p){const e=effectiveVotes(p);const until=p?.seconds?Math.max(0,Math.ceil((p.startedAt+p.seconds*1000-Date.now())/1000)):0;return `<span class="pill ${until<=0?'red':'blue'}" data-countdown data-start="${p.startedAt}" data-seconds="${p.seconds}">${until>0?'⏱ '+until+' 秒':'⏰ 時間到 · 等主持人'} </span><span class="pill">已投 ${e.cast} / ${e.ids.length}</span>`}
+function renderVoting(p,{intro='',multi=1}={}){if(!p)return '<div class="empty">正在載入投票…</div>';const current=S.ballots[S.uid];const allowed=Boolean(p.eligible?.[S.uid]&&eligiblePresent(S.uid));const opts=pollOptions(p);const multiKey=p.id;let picked=localMulti[multiKey]||[];
+ let options=multi>1?`<div class="card-grid">${opts.map(o=>`<button class="skill-card ${picked.includes(o.id)?'selected':''}" data-action="multi-pick" data-poll="${p.id}" data-value="${esc(o.id)}" ${current!==undefined||p.status!=='open'||!allowed?'disabled':''}><span class="icon">${C[o.id]?.icon||'🃏'}</span><span class="card-name">${esc(o.label)}</span><span class="card-desc">${esc(C[o.id]?.desc||'')}</span>${picked.includes(o.id)?'<span class="check">✓</span>':''}</button>`).join('')}</div>${current===undefined&&allowed&&p.status==='open'?`<button class="btn azure" style="margin-top:12px" data-action="submit-multi" data-poll="${p.id}" ${picked.length!==multi?'disabled':''}>送出 ${multi} 張選擇 (${picked.length}/${multi})</button>`:''}`:
+ `<div class="choice-grid">${opts.map(o=>`<button class="option small-opt ${current===o.id?'selected':''}" data-action="cast-vote" data-poll="${p.id}" data-value="${esc(o.id)}" ${current!==undefined||p.status!=='open'||!allowed?'disabled':''}>${esc(o.label)}</button>`).join('')}</div>`;
+ let tie='';if(p.status==='tie'){const choice=S.ties?.value;const need=p.tieNeed||1;if(isCaptain(p.team)){const options=(p.tieOptions||[]).map(id=>({id,label:optionLabel(id,p)}));if(need>1){let sel=localMulti[`tie-${p.id}`]||[];tie=`<div class="warning"><strong>👑 平票：請隊長選出 ${need} 張</strong><div class="choice-grid">${options.map(o=>`<button class="option small-opt ${sel.includes(o.id)?'selected':''}" data-action="multi-pick" data-poll="tie-${p.id}" data-value="${esc(o.id)}">${esc(o.label)}</button>`).join('')}</div><button class="btn gold" data-action="tie-submit" ${sel.length!==need?'disabled':''}>確認決定</button></div>`;}else tie=`<div class="warning"><strong>👑 平票：由隊長決定</strong><div class="choice-grid">${options.map(o=>`<button class="option small-opt" data-action="tie-choice" data-value="${esc(o.id)}">${esc(o.label)}</button>`).join('')}</div></div>`}else tie=`<div class="warning">票數平手，等待${esc(nameOf(S.captains[p.team]))}作最後決定。</div>`;if(choice)tie='<div class="mini-tip">隊長已決定，等待系統結算。</div>'}
+ let hostStats='';if(isHost()){const stats=tally(p);hostStats=`<div class="divider"></div><h3>主持人即時票數統計</h3><div class="poll-grid">${pollOptions(p).map(o=>`<div class="poll-row"><span style="overflow-wrap:anywhere">${esc(o.label)}</span><div class="poll-track"><span style="width:${Math.round(100*(stats.counts[o.id]||0)/Math.max(1,stats.cast))}%"></span></div><strong>${stats.counts[o.id]||0}</strong></div>`).join('')}</div>`;}let host=isHost()?`${hostStats}<div class="control-row"><button class="btn ghost sm" data-action="close-poll" ${p.status!=='open'?'disabled':''}>主持人：截止並統計有效票</button></div>`:'';
+ return `<p class="desc" style="margin-bottom:12px">${intro}</p><div class="between" style="margin-bottom:13px">${showCount(p)}</div>${current!==undefined?`<div class="mini-tip">✓ 你已送出：${esc(Array.isArray(current)?current.map(k=>optionLabel(k,p)).join('、'):optionLabel(current,p))}（不可重複投票）</div>`:!allowed?'<div class="mini-tip">你不在本次投票名單內，或目前離線；新加入隊員從下一輪投票才有投票權。</div>':''}${options}${tie}${host}`;}
+function lobbyTeam(side){const roster=members(side),captain=S.captains?.[side];let list=roster.map(p=>`<div class="player"><div><div class="player-name">${p.uid===captain?'👑 ':''}${esc(p.name)}${p.uid===S.uid?'（你）':''}</div><div class="player-note">${p.uid===captain?'隊長 · ':''}${present(p.uid)?p.ready?'🟢 已準備':'⚪ 未準備':'⚫ 離線'}</div></div><div class="player-buttons">${isHost()?`<button class="btn xs ghost" data-action="set-captain" data-side="${side}" data-uid="${esc(p.uid)}" ${p.uid===captain?'disabled':''}>設為隊長</button><button class="btn xs danger" data-action="kick" data-uid="${esc(p.uid)}">踢除</button>`:''}</div></div>`).join('')||'<div class="empty">等待隊員加入</div>';
+ const nameEditing=isCaptain(side)&&S.meta?.status==='lobby';return `<div class="team-head"><div class="team-name"><span class="team-symbol">${side==='left'?'🔴':'🔵'}</span>${esc(teamName(side))}</div><span class="pill ${side==='left'?'red':'blue'}">${roster.length} 人</span></div><div class="small muted">👑 隊長：${esc(nameOf(captain))}</div>${nameEditing?`<div class="control-row"><button class="btn xs gold" data-action="rename" data-side="${side}">✎ 修改隊名</button></div>`:''}<div style="margin-top:12px">${list}</div>${S.meta?.status==='lobby'&&!isHost()?`<div class="control-row"><button class="btn sm ${myTeam()===side?'primary':'ghost'}" data-action="choose-team" data-side="${side}" ${myTeam()===side?'disabled':''}>${myTeam()===side?'✓ 我的隊伍':'加入此隊'}</button></div>`:''}`}
+function renderLobby(){$('room-label').textContent=`ROOM ${S.room}`;$('host-name').textContent=S.meta?.hostName||'主持人';$('lobby-left').innerHTML=lobbyTeam('left');$('lobby-right').innerHTML=lobbyTeam('right');const noTeam=ents(S.members).filter(([uid,p])=>uid!==S.meta?.hostId&&!p.team);$('unassigned-panel').style.display=noTeam.length?'block':'none';$('unassigned-list').innerHTML=noTeam.map(([uid,p])=>`<div class="player"><div><strong>${esc(p.name)}</strong><div class="subtle">${present(uid)?'等待分隊':'目前離線'}</div></div>${isHost()?`<button class="btn xs danger" data-action="kick" data-uid="${esc(uid)}">踢除</button>`:''}</div>`).join('');
+ const roster=ents(S.members).filter(([uid])=>uid!==S.meta?.hostId),ready=roster.filter(([uid,p])=>p.ready&&p.team&&present(uid)),need=roster.filter(([uid,p])=>!p.ready||!p.team||!present(uid));const captainsReady=SIDES.every(s=>S.captains?.[s]&&present(S.captains[s])&&teamOf(S.captains[s])===s);const canStart=members('left').some(p=>present(p.uid))&&members('right').some(p=>present(p.uid))&&captainsReady&&need.length===0;
+ $('ready-pill').textContent=`${ready.length} / ${roster.length} 已準備`;$('ready-copy').textContent=`${esc(teamName('left'))} ${members('left').filter(p=>p.ready&&present(p.uid)).length}/${members('left').length} ｜ ${esc(teamName('right'))} ${members('right').filter(p=>p.ready&&present(p.uid)).length}/${members('right').length}`;$('ready-progress').style.width=`${roster.length?ready.length/roster.length*100:0}%`;
+ $('lobby-warning').textContent=canStart?'✓ 所有人都已準備，可以開始公開卡投票。':'請確認：兩隊至少各一名在線隊員、已指定隊長，且所有成員都分隊、在線並按下準備。';
+ $('lobby-controls').innerHTML=isHost()?`<label class="field" style="max-width:210px">每次投票提醒秒數<input id="poll-seconds" type="number" min="10" max="600" value="${Number(S.meta.pollSeconds||60)}"></label><button class="btn ghost" data-action="save-timer">儲存計時</button><button class="btn rose" data-action="start-draft" ${!canStart?'disabled':''}>確認開始選卡</button><button class="btn danger" data-action="disband">解散房間</button>`:`${myTeam()?`<button class="btn ${S.members[S.uid]?.ready?'ghost':'green'}" data-action="ready">${S.members[S.uid]?.ready?'取消準備':'✓ 我已準備'}</button>`:''}<button class="btn danger" data-action="leave">退出房間</button>`;
+}
+function teamCardHtml(side){const b=S.battle||{},t=b.teams?.[side]||{public:[],hp:5},canSee=isHost()||myTeam()===side,privateCard=S.private[side]?.card;
+ let shown=(t.public||[]).map((c,i)=>`<span class="skill-chip" title="${esc(C[c.card]?.desc||'')}">${C[c.card]?.icon||'🃏'} ${esc(C[c.card]?.name||c.card)}${i>=3?' <small>獎勵</small>':''}</span>`).join('')||'<span class="subtle">尚無公開卡</span>';
+ let secret=t.secretRevealed?`<span class="secret-chip used">🂠 ${esc(C[t.secretRevealed]?.name||t.secretRevealed)} · 已消耗</span>`:canSee&&privateCard?`<span class="secret-chip">🂠 底牌：${esc(C[privateCard]?.name||privateCard)}（保密）</span>`:'<span class="secret-chip">🂠 秘密底牌：？</span>';
+ return `<div class="between"><h3>${side==='left'?'🔴':'🔵'} ${esc(teamName(side))}</h3><span class="pill ${side==='left'?'red':'blue'}">${members(side).length} 人</span></div><div class="heart-big">${Number(t.hp??5)} <span>♥</span></div><div class="subtle">👑 ${esc(nameOf(S.captains?.[side]))}${t.shield?'　🛡️ 金鐘罩':''}</div><div class="chips">${shown}</div><div class="chips">${secret}</div>`;}
+function renderSelection(){const status=S.meta.status,p=currentPoll(),side=p?.team||S.battle?.draftSide||'left';$('select-room-label').textContent=`ROOM ${S.room}`;$('select-step').textContent=status==='draftPublic'?'CARD DRAFT · STEP 01 / 02':status==='draftSecret'?'CARD DRAFT · STEP 02 / 02':'READY TO PLAY';$('select-title').textContent=status==='draftPublic'?'全員票選三張公開卡':status==='draftSecret'?'全員票選一張秘密底牌':'雙方牌組已準備完畢';$('select-desc').textContent=status==='draftPublic'?'每位隊員選三張，依總票數取前三名；平票由隊長決定。':status==='draftSecret'?'再票選一張底牌，對方無法讀取投票內容或底牌。':'主持人確認後，開始正式對戰。';
+ $('select-counter').textContent=status==='draftPublic'?'每人 3 張':status==='draftSecret'?'每人 1 張':'完成';
+ const isMyPoll=p&&(isHost()||side===myTeam());$('select-cards').innerHTML=status==='readyToPlay'?'<div class="empty">全部選卡完成！</div>':isMyPoll?renderVoting(p,{intro:`目前由「${teamName(side)}」選擇${status==='draftPublic'?'公開卡':'秘密底牌'}。`,multi:status==='draftPublic'?3:1}):`<div class="empty">${esc(teamName(side))} 正在秘密投票選牌，請等待。</div>`;
+ $('select-preview').innerHTML=SIDES.map(s=>`<div class="choice-row"><span>${s==='left'?'🔴':'🔵'} ${esc(teamName(s))}</span><strong>${(S.battle?.teams?.[s]?.public||[]).length}/3 公開卡</strong><span class="subtle">底牌 ${S.battle?.teams?.[s]?.secretLocked?'已鎖定':'未選'}</span></div>`).join('');$('select-status-box').innerHTML=status==='readyToPlay'?'✓ 雙方都已選好！等待主持人開始。':`主持人可手動截止；倒數時間到只提醒，不自動關閉。`;
+ $('select-controls').innerHTML=isHost()?`${status==='readyToPlay'?'<button class="btn green" data-action="start-battle">正式開戰</button>':''}<button class="btn danger" data-action="disband">解散房間</button>`:'<button class="btn danger" data-action="leave">退出房間</button>';
+ $('select-team-progress').innerHTML=SIDES.map(s=>`<div class="between"><strong>${esc(teamName(s))}</strong><span class="pill">公開 ${(S.battle?.teams?.[s]?.public||[]).length}/3 · 底牌 ${S.battle?.teams?.[s]?.secretLocked?'✓':'—'}</span></div>`).join('');
+ $('select-roster').style.display=isHost()?'block':'none';if(isHost()){$('select-manage-left').innerHTML=lobbyTeam('left');$('select-manage-right').innerHTML=lobbyTeam('right')}
+}
+function renderRoster(){const unassigned=ents(S.members).filter(([uid,p])=>uid!==S.meta?.hostId&&!p.team);let s=SIDES.map(side=>`<div class="team-panel ${side}"><h3>${esc(teamName(side))}</h3>${members(side).map(p=>`<div class="player"><span>${p.uid===S.captains?.[side]?'👑 ':''}${esc(p.name)} ${present(p.uid)?'🟢':'⚫'}</span><div class="player-buttons"><button class="btn xs gold" data-action="set-captain" data-side="${side}" data-uid="${esc(p.uid)}">隊長</button><button class="btn xs danger" data-action="kick" data-uid="${esc(p.uid)}">踢除</button></div></div>`).join('')}</div>`).join('');let u=`<div class="panel" style="margin-top:12px"><h3>新加入／尚未分隊：${unassigned.length} 人</h3>${unassigned.map(([uid,p])=>`<div class="player"><strong>${esc(p.name)}</strong><div class="player-buttons"><button class="btn xs rose" data-action="assign-team" data-uid="${uid}" data-side="left">分到${esc(teamName('left'))}</button><button class="btn xs azure" data-action="assign-team" data-uid="${uid}" data-side="right">分到${esc(teamName('right'))}</button><button class="btn xs danger" data-action="kick" data-uid="${uid}">踢除</button></div></div>`).join('')}</div>`;return `<div class="two-col">${s}</div>${u}`}
+function renderBattle(){const b=S.battle;if(!b)return;const p=currentPoll();$('game-heading').textContent=b.phase==='finished'?'🏆 對戰結束':'正式對戰';$('game-room-label').textContent=`ROOM ${S.room}`;$('game-round').textContent=`整輪 ${Number(b.cycle||1)} · 行動 ${Number(b.turnNo||1)}`;$('game-description').textContent=b.message||'等待主持人操作';$('battle-left').innerHTML=teamCardHtml('left');$('battle-right').innerHTML=teamCardHtml('right');$('battle-turn').textContent=teamName(b.turn);$('battle-phase').textContent=phaseName(b.phase);$('action-role').textContent=isHost()?'🎙 主持人':isCaptain()?'👑 隊長':myTeam()?'👤 隊員':'👀 等待分隊';$('host-note').textContent=`${isHost()?'主持人可以截止投票與判定答案。':'所有操作會即時同步給房間成員。'} 目前整輪：${b.cycle||1}。`;$('battle-history').innerHTML=(b.history||[]).slice(-14).reverse().map(t=>`<li>${esc(t)}</li>`).join('')||'<li>對戰開始</li>';
+ $('game-extras').innerHTML=isHost()?`<button class="btn ghost sm" data-action="toggle-roster">${$('game-roster').dataset.open==='1'?'收起':'⚙ 管理隊員'}</button><button class="btn danger sm" data-action="disband">解散房間</button><button class="btn ghost sm" data-action="new-game">重新開局</button>`:'<button class="btn danger sm" data-action="leave">退出房間</button>';
+ $('game-roster').style.display=isHost()&&$('game-roster').dataset.open==='1'?'block':'none';if(isHost()&&$('game-roster').dataset.open==='1')$('manage-left').innerHTML=renderRoster();
+ let html='',title='本回合操作';const mine=b.turn===myTeam(),captain=isCaptain(b.turn),actor=isHost();
+ if(['cardVote','targetVote','answerVote','rewardVote','mercyVote','suddenVote'].includes(b.phase)){
+  title={cardVote:'① 全隊投票：是否使用功能卡',targetVote:'指定技能目標',answerVote:'② 英文題目作答',rewardVote:'③ 全隊票選答對獎勵',mercyVote:'🩸 慈悲投票',suddenVote:'⚔️ 雙方加賽'}[b.phase];const secret=p?.kind==='draftSecret';const intro=p?.kind==='answer'?`由主持人出題；${b.streak?`三題連答進度 ${b.streak.count}/3。`:b.mirror?`鏡花水月 ${3-b.mirror.remaining}/2。`:''}${b.question?.text?`<br><strong>${esc(b.question.text)}</strong>`:''}`:p?.kind==='card'?'本隊所有在線隊員投票選擇一張卡，或「不使用」。每次答題最多使用一張。':p?.kind==='reward'?'答對一般題後投票選擇獎勵；原本答對的題目計入連答第 1 題。':p?.kind==='mercy'?'由存活隊伍投票決定是否讓生命歸零的對手恢復 1 命。':p?.kind==='sudden'?`雙方同時歸零，加賽同一道題：${esc(b.sudden?.question||'主持人口頭出題')}。` :'由發動隊伍投票指定目標。';
+  if(!p&&!actor&&myTeam()!==b.pollTeam)html=`<div class="empty">${esc(teamName(b.pollTeam||b.turn))} 正在進行隊內投票，請等待。</div>`;else html=renderVoting(p,{intro,multi:1});
+  if(b.phase==='answerVote'&&isHost()&&p?.kind==='answer'&&eligibleIds(p).length===0)html+=`<div class="warning">目前沒有可投票的答題者（可能全員被禁言或離線）。可視為無法作答，按普通答錯規則處理。</div><button class="btn danger" data-action="forfeit-answer">無人可答，判定答錯</button>`;
+  if(b.phase==='answerVote'&&p?.kind==='answer'&&b.question?.choices)html+=`<div class="option-choices">${Object.entries(b.question.choices).filter(([,v])=>v).map(([k,v])=>`<div>${k}. ${esc(v)}</div>`).join('')}</div>`;
+ }else if(b.phase==='awaitCard'){
+  title='準備進入本隊回合';html=isHost()?`<p class="desc">現在輪到 ${esc(teamName(b.turn))}；請開放出牌投票。</p><button class="btn primary" data-action="open-card">開啟全隊出牌投票 →</button>`:'<div class="empty">等待主持人開放本回合出牌投票。</div>';
+ }else if(b.phase==='awaitQuestion'||b.phase==='hint'){
+  title=b.phase==='hint'?'☎️ 話吉玩・提示階段':'② 主持人出題';html=isHost()?`${b.phase==='hint'?'<div class="warning">請向玩家提供一項提示。點選下方按鈕後，進入答題。</div>':''}<label class="field">題目（可留空，口頭出題）<input id="question-text" placeholder="可輸入英文題目" maxlength="260" value="${esc(questionDraft.text||'')}"></label><div class="two-col" style="margin-top:10px">${['A','B','C','D'].map(k=>`<label class="field">${k} 選項（可留空）<input id="question-${k}" maxlength="90" value="${esc(questionDraft[k]||'')}"></label>`).join('')}</div><button class="btn primary" style="margin-top:14px" data-action="open-question">${b.phase==='hint'?'已提供提示，開始作答':'開放本題 A／B／C／D 投票'}</button>`:`<div class="empty">${b.phase==='hint'?'主持人正在提供一項提示。':'等待主持人宣讀或顯示下一題。'}</div>`;
+ }else if(b.phase==='answerJudge'){
+  title='🎙 主持人判定答題';html=`<div class="warning">全隊最終答案：<strong>${esc(b.answerChosen||'—')}</strong>。由主持人依題目正確答案裁定。</div>${isHost()?`<div class="control-row"><button class="btn green" data-action="judge" data-correct="yes">✓ 答對</button><button class="btn rose" data-action="judge" data-correct="no">✕ 答錯</button></div>`:'<p class="desc">等待主持人裁定。</p>'}`;
+ }else if(b.phase==='duelReady'){
+  title=`⚔️ ${b.pending?.secret?'一對一搶答':'釘孤支'}・主持人出題`;html=isHost()?`<p class="desc">代表：${esc(nameOf(b.duel?.ownUid))} VS ${esc(nameOf(b.duel?.enemyUid))}。請先準備同一道題目，再同時開放搶答。</p><label class="field">題目（可留空，口頭出題）<input id="question-text" maxlength="260" value="${esc(questionDraft.text||'')}"></label><div class="two-col">${['A','B','C','D'].map(k=>`<label class="field">${k} 選項<input id="question-${k}" maxlength="90" value="${esc(questionDraft[k]||'')}"></label>`).join('')}</div><button class="btn primary" data-action="duel-open">同時開放兩位代表搶答</button><button class="btn ghost" data-action="cancel-duel">取消決鬥，卡牌保留</button>`:'<div class="empty">等待主持人開放兩位代表搶答。</div>';
+ }else if(b.phase==='duelAnswer'||b.phase==='duelJudge'){
+  title=`⚔️ ${b.pending?.secret?'一對一搶答':'釘孤支'}・第 ${b.duel?.attempt||1} 題`;const me=[b.duel?.ownUid,b.duel?.enemyUid].includes(S.uid),val=S.duelAnswers[S.uid];html=`<p class="desc">代表：${esc(nameOf(b.duel?.ownUid))} VS ${esc(nameOf(b.duel?.enemyUid))}。請兩位代表於網頁上作答，系統以 Firebase 伺服器時間記錄。</p>${b.question?.text?`<div class="warning">${esc(b.question.text)}</div>`:''}<div class="choice-grid">${['A','B','C','D'].map(k=>`<button class="option" data-action="duel-answer" data-value="${k}" ${!me||!!val||b.phase!=='duelAnswer'?'disabled':''}>${k}${b.question?.choices?.[k]?` · ${esc(b.question.choices[k])}`:''}</button>`).join('')}</div>${val?'<p class="desc">✓ 已收到你的作答，等待另一位代表。</p>':''}<div class="mini-tip">雙方答錯會重賽；同時答對則較快者勝，毫秒相同則重賽。</div>`;
+  if(isHost())html+=`<button class="btn ghost sm" data-action="cancel-duel">取消決鬥，卡牌保留</button><div class="divider"></div><h3>兩名代表作答狀態</h3>${[b.duel?.ownUid,b.duel?.enemyUid].map(uid=>`<p class="desc">${esc(nameOf(uid))}：${S.duelAnswers[uid]?`已送出 ${esc(S.duelAnswers[uid].answer)}（伺服器時間 ${esc(String(S.duelAnswers[uid].at))}）`:'尚未作答'}</p>`).join('')}${b.phase==='duelJudge'?`<div class="warning">請選擇本題的正確選項，系統將根據正確性與時間決勝。</div><div class="choice-grid">${['A','B','C','D'].map(k=>`<button class="btn gold" data-action="duel-judge" data-value="${k}">正確答案 ${k}</button>`).join('')}</div>`:'<p class="subtle">等待雙方作答；如有人離線，可重新指派代表後重開本張卡。</p>'}`;
+ }else if(b.phase==='suddenJudge'){
+  title='⚔️ 加賽・主持人判定';html=`<div class="warning">${esc(teamName('left'))}：${esc(b.sudden?.answers?.left||'未完成')} ｜ ${esc(teamName('right'))}：${esc(b.sudden?.answers?.right||'未完成')}</div>${isHost()?`<p class="desc">請選出本題正確答案，只有一隊答對才決出勝負，否則繼續加賽。</p><div class="choice-grid">${['A','B','C','D'].map(k=>`<button class="btn gold" data-action="sudden-judge" data-value="${k}">正確答案 ${k}</button>`).join('')}</div>`:''}`;
+ }else if(b.phase==='suddenReady'){
+  title='⚔️ 雙方同時歸零・加賽';html=isHost()?`<p class="desc">兩隊需回答同一道題目，由各隊全員投票，平票隊長決定。直到只有一隊答對。</p><label class="field">加賽題目（可口頭出題）<input id="question-text" maxlength="260" value="${esc(questionDraft.text||'')}"></label><button class="btn primary" data-action="start-sudden">開啟加賽投票</button>`:'<div class="empty">等待主持人開啟加賽。</div>';
+ }else if(b.phase==='summary'){
+  title='本回合結算';html=`<div class="warning">${esc(b.message||'本回合已結束')}</div>${isHost()?'<button class="btn primary" style="margin-top:12px" data-action="next-turn">開始下一隊回合 →</button>':'<p class="desc">等待主持人開始下一隊回合。</p>'}`;
+ }else if(b.phase==='finished'){
+  title='🏆 對戰結束';html=`<div class="empty"><h2>${esc(teamName(b.winner))}獲勝！</h2></div>${isHost()?'<button class="btn primary" style="margin-top:13px" data-action="new-game">保留玩家，重新分隊開局</button>':''}`;
+ }else html='<div class="empty">正在同步戰況…</div>';
+ $('action-title').textContent=title;$('action-content').innerHTML=html;
+}
+const phaseName=k=>({awaitCard:'準備出牌',cardVote:'全隊出牌投票',targetVote:'決定技能目標',awaitQuestion:'等待出題',hint:'提示階段',answerVote:'作答投票',answerJudge:'主持人裁定',rewardVote:'獎勵投票',duelReady:'等待決鬥出題',duelAnswer:'雙人搶答',duelJudge:'決鬥裁定',mercyVote:'慈悲投票',summary:'回合結算',suddenReady:'加賽',suddenVote:'加賽投票',suddenJudge:'加賽裁定',finished:'已結束'})[k]||'準備中';
+// ────────────────────── 房間／權限／玩家操作 ──────────────────────
+async function leave(){if(isHost()){if(await confirmUI('解散房間？','主持人離開將關閉房間，所有玩家都會返回首頁。','解散'))await disband(true);return}if(!await confirmUI('退出房間','確定退出嗎？離開後要重新加入才可遊玩。','退出'))return;const uid=S.uid;try{await onDisconnect(R(`presence/${uid}`)).cancel();await remove(R(`presence/${uid}`));await remove(R(`members/${uid}`));dropLocal('已退出房間')}catch(e){error(e,'退出房間失敗')}}
+async function disband(force=false){if(!isHost())throw Error('僅主持人能解散');if(!force&&!await confirmUI('解散整個房間？','所有玩家將離開，遊戲進度無法恢復。','解散'))return;const path=R();await remove(path);dropLocal('房間已解散')}
+async function kick(uid){if(!isHost()||uid===S.uid)throw Error('沒有權限');if(!await confirmUI('踢除玩家',`確定將 ${nameOf(uid)} 移出房間嗎？`,'踢除'))return;await update(ref(db),{[roomPath(`members/${uid}`)]:null,[roomPath(`presence/${uid}`)]:null});say('已移出玩家','good')}
+async function changeTeam(side){if(S.meta?.status!=='lobby'||isHost())throw Error('目前不能自行分隊');const uid=S.uid;await runTransaction(R(`members/${uid}`),m=>m?{...m,team:side,ready:false,teamJoinedAt:Date.now()}:undefined,{applyLocally:false})}
+async function assignTeam(uid,side){if(!isHost()||!SIDES.includes(side))throw Error('權限錯誤');await runTransaction(R(`members/${uid}`),m=>m?{...m,team:side,ready:false,teamJoinedAt:Date.now()}:undefined,{applyLocally:false});say(`${nameOf(uid)} 已加入 ${teamName(side)}`,'good')}
+async function ready(){if(!myTeam()||S.meta?.status!=='lobby')throw Error('請先加入隊伍');await runTransaction(R(`members/${S.uid}`),m=>m&&m.team?{...m,ready:!m.ready}:undefined,{applyLocally:false})}
+async function captain(side,uid){if(!isHost())throw Error('僅主持人可指定');if(teamOf(uid)!==side)throw Error('隊員不在指定隊伍');await set(R(`captains/${side}`),uid);say(`已指定隊長：${nameOf(uid)}`,'good')}
+async function rename(side){if(!isCaptain(side)||S.meta?.status!=='lobby')throw Error('僅準備大廳中的隊長可修改');let name=prompt('請輸入新的隊名（最多 12 字）',teamName(side));if(name===null)return;name=name.trim();if(!name||name.length>12)throw Error('隊名需為 1～12 字');await set(R(`teamNames/${side}`),name);say('隊名已同步','good')}
+async function saveTimer(){if(!isHost())throw Error('僅主持人可設定');const n=Number($('poll-seconds')?.value||60);if(!Number.isInteger(n)||n<10||n>600)throw Error('投票時間請設在 10～600 秒');await update(R('meta'),{pollSeconds:n});say(`投票提醒已設定為 ${n} 秒`,'good')}
+function initBattle(){return{phase:'draftPublic',draftSide:'left',turn:'left',actionSide:'left',turnNo:1,cycle:1,acted:{left:false,right:false},teams:{left:{hp:5,public:[],shield:false,secretLocked:false,secretRevealed:''},right:{hp:5,public:[],shield:false,secretLocked:false,secretRevealed:''}},silences:{},streak:null,mirror:null,duel:null,pollId:'',pending:null,question:null,answerChosen:'',nextTurn:'right',history:['對戰已建立，雙方準備選牌。'],message:'開始公開卡票選。'}}
+function log(b,msg){b.history=(b.history||[]).slice(-24);b.history.push(msg);b.message=msg}
+function changes(paths){return update(ref(db),Object.fromEntries(ents(paths).map(([p,v])=>[roomPath(p),v])))}
+async function startDraft(){if(!isHost())throw Error('僅主持人可開始');const roster=ents(S.members).filter(([uid])=>uid!==S.uid);if(!SIDES.every(s=>members(s).some(p=>present(p.uid))&&S.captains[s]&&present(S.captains[s])&&teamOf(S.captains[s])===s)||!roster.length||roster.some(([uid,m])=>!m.team||!m.ready||!present(uid)))throw Error('尚未全員準備或隊長未指派');if(!await confirmUI('開始選卡？','全員已準備，開始後不能自行改隊伍或隊名。','開始選卡'))return;
+ const b=initBattle();await changes({battle:b,'meta/status':'draftPublic'});await launchPoll('draftPublic','left',CARDS.map(c=>c.id),'draftPublic',b);}
+async function startBattle(){if(!isHost()||S.meta?.status!=='readyToPlay')throw Error('還沒完成選牌');const b=cp(S.battle);b.phase='awaitCard';b.turn='left';b.actionSide='left';log(b,'⚔️ 對戰開始！由 '+teamName('left')+' 先行動。');if(!await confirmUI('正式開始對戰？','雙方選牌已完成，確認後由左隊先行動。','開始對戰'))return;await changes({battle:b,'meta/status':'playing'});}
+async function newGame(){if(!isHost())throw Error('僅主持人可重開');if(!await confirmUI('重新開局？','保留房間與所有成員，但隊伍、隊名、隊長、準備狀態與牌組全部重置。','重新開局'))return;
+ let updates={battle:null,'captains':null,'teamNames':null,'private':null,'meta/status':'lobby'};for(const [uid,m] of ents(S.members))if(uid!==S.uid)updates[`members/${uid}`]={...m,team:'',ready:false,teamJoinedAt:0};await changes(updates);say('已回到準備大廳，請重新分隊','good')}
+// ────────────────────── 投票（單人一票，投票名單快照） ──────────────────────
+function isSilenced(b,uid){return Boolean(b?.silences?.[uid]?.remaining>0)}
+function pollParticipants(kind,side,b){if(kind==='duel')return [b.duel.ownUid,b.duel.enemyUid].filter(uid=>S.members[uid]&&present(uid));return members(side).filter(p=>present(p.uid)&&!(kind==='answer'&&isSilenced(b,p.uid))).map(p=>p.uid)}
+async function launchPoll(kind,side,options,phase,b){if(!isHost())throw Error('權限不足');let id=token(),seconds=S.meta?.pollSeconds||60,eligible=Object.fromEntries(pollParticipants(kind,side,b).map(uid=>[uid,true]));let poll={kind,team:side,options,eligible,status:'open',startedAt:Date.now(),seconds};b.phase=phase;b.pollId=id;b.pollTeam=side;if(kind==='draftPublic'||kind==='draftSecret')b.draftSide=side;await changes({[`polls/${id}`]:poll,battle:b});return id}
+async function vote(value,isMulti=false){const p=currentPoll();if(!p||p.status!=='open'||!p.eligible?.[S.uid])throw Error('目前沒有你能參與的投票');if(!eligiblePresent(S.uid))throw Error('目前離線，不能投票');const available=pollOptions(p).map(o=>o.id);if(isMulti){if(p.kind!=='draftPublic'||!Array.isArray(value)||value.length!==3||new Set(value).size!==3||!value.every(k=>available.includes(k)))throw Error('必須選擇三張不同公開卡')}else if(!available.includes(value))throw Error('選項不在本次投票中');const path=`${p.kind==='draftSecret'?'secretBallots':'ballots'}/${p.id}/${S.uid}`;const tx=await runTransaction(R(path),v=>v===null?value:undefined,{applyLocally:false});if(!tx.committed)throw Error('你已投過票，不能重複送出');say('已送出投票','good')}
+async function voteDuel(value){const p=currentPoll(),b=S.battle;if(p?.kind!=='duel'||b?.phase!=='duelAnswer'||![b.duel.ownUid,b.duel.enemyUid].includes(S.uid))throw Error('你不是本次決鬥代表');const tx=await runTransaction(R(`duelAnswers/${p.id}/${S.uid}`),old=>old===null?{answer:value,at:serverTimestamp()}:undefined,{applyLocally:false});if(!tx.committed)throw Error('你已搶答');say('已記錄搶答','good')}
+async function captainTie(value){const p=currentPoll();if(!p||p.status!=='tie'||!isCaptain(p.team))throw Error('只有這隊隊長能裁定平票');let items=Array.isArray(value)?value:[value];if(items.length!==(p.tieNeed||1)||new Set(items).size!==items.length||!items.every(k=>(p.tieOptions||[]).includes(k)))throw Error('平票裁定選項錯誤');await set(R(`tieChoices/${p.id}`),{value:items.join(',')});say('平票裁定已送出','good')}
+function tally(p){const {ids,v}=effectiveVotes(p),counts=Object.fromEntries(pollOptions(p).map(o=>[o.id,0]));if(p.kind==='draftPublic'){for(const val of Object.values(v))if(Array.isArray(val)&&val.length===3)for(const id of val)if(id in counts)counts[id]++}else for(const val of Object.values(v))if(typeof val==='string'&&val in counts)counts[val]++;return {ids,counts,cast:Object.keys(v).length}}
+function computeOutcome(p){const {counts,cast}=tally(p);if(cast===0)return {empty:true};const ranked=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b));if(p.kind==='draftPublic'){
+ const boundary=counts[ranked[2]],fixed=ranked.filter(k=>counts[k]>boundary),tied=ranked.filter(k=>counts[k]===boundary);const need=3-fixed.length;if(tied.length>need)return {tied,need,fixed};return {choice:[...fixed,...tied.slice(0,need)]};}
+ const best=counts[ranked[0]],tied=ranked.filter(k=>counts[k]===best);return tied.length>1?{tied,need:1,fixed:[]}:{choice:ranked[0]};}
+async function closePoll(manual=false){const p=currentPoll();if(!isHost()||!p)return;if(p.status==='closed')return;if(p.status==='tie'){if(!S.ties?.value)return;let items=S.ties.value.split(',');if(items.length!==(p.tieNeed||1)||new Set(items).size!==items.length||!items.every(x=>(p.tieOptions||[]).includes(x)))throw Error('隊長平票裁定有無效選項');let chosen=(p.tieNeed||1)>1?[...(p.fixed||[]),...items]:items[0];await settlePoll(p,chosen);return}
+ if(p.status!=='open')return;const result=computeOutcome(p);if(result.empty){if(manual)throw Error('目前沒有有效票，請等待成員投票');return}if(result.tied){await changes({[`polls/${p.id}/status`]:'tie',[`polls/${p.id}/tieOptions`]:result.tied,[`polls/${p.id}/tieNeed`]:result.need,[`polls/${p.id}/fixed`]:result.fixed});return}await settlePoll(p,result.choice)}
+async function settlePoll(p,choice){let latest=(await get(R('battle'))).val();if(!latest||latest.pollId!==p.id)return;const b=cp(latest),team=p.team;let closing={[`polls/${p.id}/status`]:'closed'};
+ if(p.kind==='draftPublic'){
+  b.teams[team].public=choice.map(id=>({key:token(),card:id}));log(b,`${teamName(team)} 已票選三張公開卡。`);if(team==='left'){await changes(closing);await launchPoll('draftPublic','right',CARDS.map(c=>c.id),'draftPublic',b)}else{await changes({...closing,'meta/status':'draftSecret'});b.draftSide='left';await launchPoll('draftSecret','left',CARDS.filter(c=>!b.teams.left.public.some(x=>x.card===c.id)).map(c=>c.id),'draftSecret',b)}return;
+ }
+ if(p.kind==='draftSecret'){
+  b.teams[team].secretLocked=true;log(b,`${teamName(team)} 已完成秘密底牌選擇。`);closing[`private/${team}`]={card:choice};if(team==='left'){await changes(closing);await launchPoll('draftSecret','right',CARDS.filter(c=>!b.teams.right.public.some(x=>x.card===c.id)).map(c=>c.id),'draftSecret',b)}else{b.phase='readyToPlay';b.pollId='';await changes({...closing,battle:b,'meta/status':'readyToPlay'})}return;
+ }
+ if(p.kind==='card'){
+  b.pending=null;if(choice!=='none'){const card=resolveCardId(b,team,choice);if(!card||card==='c5')throw Error('卡牌已不存在或不允許主動使用');b.pending={token:choice,secret:choice==='secret',card:choice==='secret'?null:card};}
+  const id=resolveCardId(b,team,choice);if(id==='c1'||id==='c10'){let opts=id==='c1'?members(foe(team)).filter(x=>present(x.uid)).map(x=>x.uid):members(team).filter(x=>present(x.uid)).flatMap(a=>members(foe(team)).filter(x=>present(x.uid)).map(z=>`${a.uid}|${z.uid}`));if(!opts.length){b.pending=null;log(b,'目前沒有可指定的技能目標，卡牌保留。');b.phase='awaitQuestion';b.pollId='';await changes({...closing,battle:b});return}await changes(closing);await launchPoll('target',team,opts,'targetVote',b);return}
+  if(id&&['c6','c8','c11','c4'].includes(id)){
+   const extra={};let success=applyInstant(b,team,id,extra);if(success){consume(b,team,extra);log(b,`${teamName(team)} 已成功發動${choice==='secret'?'秘密底牌':C[id].name}。`)}else{b.pending=null;log(b,'技能條件不成立，卡牌保留。')}
+   if(id==='c6'&&success){b.mirror={source:team,target:foe(team),remaining:2};b.turn=foe(team);b.phase='awaitQuestion'}else if(id==='c4'&&success){b.phase='hint'}else b.phase='awaitQuestion';b.pollId='';await changes({...closing,...extra,battle:b});return;
+  }
+  b.phase='awaitQuestion';b.pollId='';log(b,choice==='none'?`${teamName(team)} 決定本題不使用卡牌。`:`${teamName(team)} 已選定技能，等待主持人出題。`);await changes({...closing,battle:b});return;
+ }
+ if(p.kind==='target'){
+  const id=resolveCardId(b,team,b.pending?.token),extra={};if(id==='c1'){
+   b.silences=b.silences||{};b.silences[choice]={remaining:2};consume(b,team,extra);b.pending=null;b.phase='awaitQuestion';log(b,`${nameOf(choice)} 被禁言，接下來兩整輪不得參與答題投票。`);
+  }else if(id==='c10'){
+   const [ownUid,enemyUid]=choice.split('|');b.duel={source:team,ownUid,enemyUid,attempt:1};b.phase='duelAnswer';b.pending=b.pending||{token:'none',secret:false};log(b,`${b.pending?.secret?'秘密卡挑戰':'釘孤支'}：${nameOf(ownUid)} VS ${nameOf(enemyUid)}。`);await changes({...closing,battle:b});await launchPoll('duel',team,['A','B','C','D'],'duelReady',b);return;
+  }
+  b.pollId='';await changes({...closing,...extra,battle:b});return;
+ }
+ if(p.kind==='answer'||p.kind==='sudden'){
+  if(p.kind==='sudden'){b.sudden=b.sudden||{answers:{}};if(team==='left'){b.sudden.leftDone=true;await changes({...closing,privateSudden:{answer:choice}});await launchPoll('sudden','right',['A','B','C','D'],'suddenVote',b)}else{const first=(await get(R('privateSudden'))).val()?.answer;b.sudden.answers={left:first,right:choice};b.phase='suddenJudge';b.pollId='';await changes({...closing,privateSudden:null,battle:b})}return}
+  b.answerChosen=choice;b.phase='answerJudge';log(b,`${teamName(team)} 最終答案為 ${choice}，請主持人裁定。`);await changes({...closing,battle:b});return;
+ }
+ if(p.kind==='reward'){await changes(closing);await finishReward(b,choice);return}
+ if(p.kind==='mercy'){await changes(closing);await finishMercy(b,choice);return}
+}
+// ────────────────────── 卡牌與戰局結算 ──────────────────────
+function resolveCardId(b,side,key){if(!key||key==='none')return null;if(key==='secret')return S.private?.[side]?.card||null;return b?.teams?.[side]?.public?.find(x=>x.key===key)?.card||null}
+function consume(b,side,changeset={},pending=b.pending){if(!pending||pending.token==='none')return;if(pending.secret){const id=S.private?.[side]?.card;if(!id)return;b.teams[side].secretRevealed=id;changeset[`private/${side}`]=null;S.private[side]=null;}else{const list=b.teams[side].public||[];b.teams[side].public=list.filter(c=>c.key!==pending.token);}b.pending=null}
+function applyInstant(b,team,id,extra){if(id==='c8'){const other=b.teams[foe(team)]?.public||[];if(!other.length)return false;const chosen=pick(other);b.teams[foe(team)].public=other.filter(c=>c.key!==chosen.key);b.teams[team].public.push({...chosen,key:token()});log(b,`${teamName(team)} 偷得 ${C[chosen.card].name}。`);return true}if(id==='c11'){if(b.teams[team].shield)return false;b.teams[team].shield=true;return true}return['c4','c6'].includes(id)}
+function shieldAttack(b,attacker,victim,damage){if(!damage)return;const defend=b.teams[victim],attack=b.teams[attacker];if(defend.shield){defend.shield=false;const n=Math.random();if(n<.5){defend.hp-=damage;log(b,`🛡️ ${teamName(victim)} 金鐘罩無效，受到 ${damage} 點傷害。`);}else if(n<.625){attack.hp-=damage;log(b,`🛡️ ${teamName(victim)} 金鐘罩反彈全部 ${damage} 點傷害！`)}else{log(b,`🛡️ ${teamName(victim)} 金鐘罩免疫 ${damage} 點傷害。`)}}else defend.hp-=damage}
+function revival(b,extra){for(const side of SIDES){if(b.teams[side].hp>0)continue;const pub=(b.teams[side].public||[]).find(x=>x.card==='c5');if(pub){b.teams[side].public=b.teams[side].public.filter(x=>x.key!==pub.key);b.teams[side].hp=1;log(b,`🌟 ${teamName(side)} 公開卡「迴光返照」觸發，恢復 1 命。`);continue}if(S.private?.[side]?.card==='c5'){b.teams[side].hp=1;b.teams[side].secretRevealed='c5';extra[`private/${side}`]=null;S.private[side]=null;log(b,`🌟 ${teamName(side)} 秘密底牌「迴光返照」觸發，恢復 1 命。`)}}}
+async function afterDamage(b,source,extra={}){revival(b,extra);const zero=SIDES.filter(s=>b.teams[s].hp<=0);b.actionSide=source;b.nextTurn=foe(source);
+ if(zero.length===2){b.phase='suddenReady';b.pollId='';b.sudden={answers:{}};log(b,'⚔️ 雙方同時歸零，進入加賽決勝！');await changes({...extra,battle:b});return}
+ if(zero.length===1){const dead=zero[0],live=foe(dead);b.mercy={dead,by:live,source};log(b,`🩸 ${teamName(dead)} 生命歸零！由 ${teamName(live)} 投票是否借出 1 命。`);await changes(extra);await launchPoll('mercy',live,[{id:'yes',label:'💚 借對手 1 命'},{id:'no',label:'🩸 拒絕'}],'mercyVote',b);return}
+ b.phase='summary';b.pollId='';await changes({...extra,battle:b});}
+async function startCardVote(){if(!isHost()||S.battle?.phase!=='awaitCard')throw Error('目前不能開啟出牌投票');const b=cp(S.battle),team=b.turn;let cards=(b.teams[team].public||[]).filter(x=>x.card!=='c5'&&!(x.card==='c11'&&b.teams[team].shield)&&!(x.card==='c8'&&!b.teams[foe(team)].public?.length)).map(x=>x.key);let sec=S.private?.[team]?.card;if(sec&&sec!=='c5'&&!(sec==='c11'&&b.teams[team].shield)&&!(sec==='c8'&&!b.teams[foe(team)].public?.length))cards.push('secret');b.actionSide=team;b.pending=null;b.mirror=null;b.duel=null;b.streak=null;await launchPoll('card',team,[{id:'none',label:'🚫 不使用功能卡'},...cards.map(x=>({id:x,label:x==='secret'?'🂠 秘密底牌':optionLabel(x,{team})}))],'cardVote',b)}
+function collectQuestion(){let text=$('question-text')?.value?.trim()||'',choices={};for(const k of ['A','B','C','D'])choices[k]=$(`question-${k}`)?.value?.trim()||'';return {text,choices}}
+async function openQuestion(){if(!isHost()||!['awaitQuestion','hint'].includes(S.battle?.phase))throw Error('目前不能出題');const b=cp(S.battle);b.question=collectQuestion();questionDraft={};const side=b.mirror?.remaining>0?b.mirror.target:b.turn;log(b,`${teamName(side)} 開始作答。${b.streak?`連答 ${b.streak.count+1}/3`:(b.mirror?`鏡花水月 ${3-b.mirror.remaining}/2`:'')}`);await launchPoll('answer',side,['A','B','C','D'],'answerVote',b)}
+async function judge(correct,forfeit=false){if(!isHost()||(!forfeit&&S.battle?.phase!=='answerJudge')||(forfeit&&S.battle?.phase!=='answerVote'))throw Error('目前尚未進入裁定');let b=cp(S.battle),source=b.actionSide||b.turn,turn=b.turn,extra={};b.question=null;b.answerChosen='';
+ // 鏡花水月強制連答（不可插卡）
+ if(b.mirror){b.teams[turn].hp+=correct?1:-1;b.mirror.remaining--;log(b,`${teamName(turn)} 鏡花水月${correct?'答對 +1':'答錯 −1'}，剩餘 ${b.mirror.remaining} 題。`);if(b.mirror.remaining>0){b.phase='awaitQuestion';b.pollId='';await changes({battle:b});return}b.mirror=null;b.turn=source;await afterDamage(b,source,extra);return}
+ // 連續答題：原本觸發的題目算第一題；再對兩題抽卡
+ if(b.streak){if(!correct){b.teams[turn].hp--;log(b,`⚡ 連答挑戰失敗！${teamName(turn)} −1 命並換隊。`);b.streak=null;await afterDamage(b,source,extra);return}b.streak.count++;if(b.streak.count>=3){const card=pick(CARDS).id;b.teams[turn].public.push({key:token(),card});log(b,`🎁 ${teamName(turn)} 三題全對，獨立隨機抽得「${C[card].name}」！換隊。`);b.streak=null;await afterDamage(b,source,extra);return}b.phase='awaitQuestion';b.pollId='';log(b,`⚡ 連答 ${b.streak.count}/3 成功，準備最後一題。`);await changes({battle:b});return}
+ const id=resolveCardId(b,turn,b.pending?.token);if(id){if(correct){if(id==='c2')shieldAttack(b,turn,foe(turn),2);if(id==='c3')b.teams[turn].hp+=2;if(id==='c7'){b.teams[turn].hp+=1;shieldAttack(b,turn,foe(turn),1)}if(id==='c9'){b.teams[turn].hp-=2;shieldAttack(b,turn,foe(turn),3)}consume(b,turn,extra);log(b,`${teamName(turn)} 使用 ${C[id].name} 答對，成功發動並消耗卡牌。`)}else{if(id==='c2'||id==='c9')b.teams[turn].hp--;if(id==='c7'){b.teams[turn].hp--;b.teams[foe(turn)].hp--}log(b,`${teamName(turn)} 使用 ${b.pending?.secret?'秘密底牌':C[id].name} 答錯；卡牌保留，底牌不公開。`)}await afterDamage(b,source,extra);return}
+ if(correct){log(b,`${teamName(turn)} 普通答題正確！進行隊內獎勵投票。`);await launchPoll('reward',turn,REWARDS.map(x=>({id:x.id,label:x.label})),'rewardVote',b);return}
+ b.teams[turn].hp--;log(b,`${teamName(turn)} 本題答錯，扣 1 命。`);await afterDamage(b,source,extra);
+}
+async function finishReward(b,choice){const team=b.turn,extra={};if(choice==='streak'){b.streak={team,count:1};b.streakUsedCycle=b.streakUsedCycle||{};b.streakUsedCycle[team]=b.cycle;b.phase='awaitQuestion';b.pollId='';log(b,`⚡ ${teamName(team)} 啟動三題連答，已完成 1/3。再答對兩題即可抽獎勵卡。`);await changes({battle:b});return}
+ if(choice==='heal')b.teams[team].hp++;if(choice==='attack')shieldAttack(b,team,foe(team),1);log(b,`${teamName(team)} 通過全員獎勵投票：${choice==='heal'?'自己補 1 命':'攻擊對方 1 命'}。`);await afterDamage(b,team,extra)}
+async function finishMercy(b,choice){const m=b.mercy;if(!m)return;b.mercy=null;b.pollId='';if(choice==='yes'){b.teams[m.dead].hp=1;log(b,`💚 ${teamName(m.by)} 同意慈悲，${teamName(m.dead)} 獲得 1 命繼續遊戲。`);await afterDamage(b,m.source);return}b.phase='finished';b.winner=m.by;log(b,`🏆 ${teamName(m.by)} 獲勝！`);await changes({battle:b,'meta/status':'finished'})}
+async function nextTurn(){if(!isHost()||S.battle?.phase!=='summary')throw Error('目前不能換隊');let b=cp(S.battle),actor=b.actionSide||b.turn;b.acted=b.acted||{left:false,right:false};b.acted[actor]=true;
+ // 禁言以被禁隊伍的兩次正式行動計算；每次行動代表一整輪的一次機會。
+ for(const [uid,val] of ents(b.silences||{}))if(teamOf(uid)===actor){val.remaining--;if(val.remaining<=0)delete b.silences[uid]}
+ if(b.acted.left&&b.acted.right){b.cycle++;b.acted={left:false,right:false}}b.turn=b.nextTurn||foe(actor);b.actionSide=b.turn;b.pending=null;b.streak=null;b.mirror=null;b.duel=null;b.question=null;b.pollId='';b.turnNo++;b.phase='awaitCard';log(b,`進入 ${teamName(b.turn)} 的回合。`);await set(R('battle'),b)}
+async function duelJudge(correctAnswer){if(!isHost()||S.battle?.phase!=='duelJudge')throw Error('搶答尚未結束');let b=cp(S.battle),d=b.duel,a=S.duelAnswers[d.ownUid],z=S.duelAnswers[d.enemyUid];if(!a||!z||!Number.isFinite(a.at)||!Number.isFinite(z.at))throw Error('兩名代表尚未提交有效作答');const ac=a.answer===correctAnswer,zc=z.answer===correctAnswer,source=d.source,other=foe(source);
+ if((!ac&&!zc)||(ac&&zc&&a.at===z.at)){b.duel.attempt++;b.question=null;log(b,'⚔️ 雙方都答錯或同毫秒答對，重新搶答另一題。');await launchPoll('duel',source,['A','B','C','D'],'duelReady',b);return}
+ const winner=ac&&!zc?source:zc&&!ac?other:a.at<z.at?source:other,loser=foe(winner),extra={},wasSecret=Boolean(b.pending?.secret);b.teams[winner].hp++;b.teams[loser].hp--;if(winner===source)consume(b,source,extra);else b.pending=null;b.duel=null;b.turn=source;log(b,`⚔️ ${teamName(winner)} 贏得${winner!==source&&wasSecret?'一對一決鬥':'釘孤支'}：自己 +1 命，對方 −1 命。${winner!==source?'發動方未勝，卡牌保留。':''}`);await afterDamage(b,source,extra)}
+async function beginDuelQuestion(){if(!isHost()||S.battle?.phase!=='duelReady')throw Error('目前非決鬥準備階段');const b=cp(S.battle);b.question=collectQuestion();questionDraft={};b.phase='duelAnswer';await set(R('battle'),b)}
+async function startSudden(){if(!isHost()||S.battle?.phase!=='suddenReady')throw Error('不是加賽階段');const b=cp(S.battle);b.sudden={answers:{},question:questionDraft.text||''};questionDraft={};await launchPoll('sudden','left',['A','B','C','D'],'suddenVote',b)}
+async function suddenJudge(answer){if(!isHost()||S.battle?.phase!=='suddenJudge')throw Error('不是加賽裁定階段');const b=cp(S.battle),a=b.sudden?.answers||{},left=a.left===answer,right=a.right===answer;if(left===right){b.phase='suddenReady';b.pollId='';log(b,'⚔️ 加賽未分出勝負，再進行下一題。');await set(R('battle'),b);return}b.winner=left?'left':'right';b.phase='finished';log(b,`🏆 加賽決勝：${teamName(b.winner)} 獲勝！`);await changes({battle:b,'meta/status':'finished'})}
+// ────────────────────── 主持人自動協調（不讓倒數直接截止） ──────────────────────
+let autoScheduled=false;
+function scheduleHost(){if(!isHost()||autoScheduled)return;autoScheduled=true;queueMicrotask(async()=>{autoScheduled=false;if(hostBusy)return;hostBusy=true;try{await hostAuto()}catch(e){error(e,'主持人同步處理失敗')}finally{hostBusy=false}})}
+async function hostAuto(){if(!S.room||!isHost())return;
+ // 隊長離線約五秒後，由入隊順位最前且仍在線的隊員自動接任。
+ for(const side of SIDES){const c=S.captains?.[side];if(!c||present(c))continue;const since=offlineSince[c];if(!since||Date.now()-since<5000)continue;const successor=members(side).find(p=>p.uid!==c&&present(p.uid));if(successor){await set(R(`captains/${side}`),successor.uid);say(`${teamName(side)} 已由 ${successor.name} 接任隊長`,'good');return}}
+ const b=S.battle,p=currentPoll();if(!b||!p||b.pollId!==p.id)return;
+ if(p.kind==='duel'){if(b.phase==='duelAnswer'&&S.duelAnswers[b.duel?.ownUid]&&S.duelAnswers[b.duel?.enemyUid]){const next=cp(b);next.phase='duelJudge';await set(R('battle'),next)}return}
+ if(!['open','tie'].includes(p.status))return;
+ if(p.status==='tie'){if(S.ties?.value)await closePoll();return}
+ const votes=effectiveVotes(p);if(votes.done)await closePoll();}
+setInterval(()=>{if(S.room){scheduleHost();document.querySelectorAll('[data-countdown]').forEach(el=>{const start=Number(el.dataset.start),sec=Number(el.dataset.seconds);const remaining=Math.max(0,Math.ceil((start+1000*sec-Date.now())/1000));el.textContent=remaining?`⏱ ${remaining} 秒`:'⏰ 時間到（待主持人截止）'})}},1000);
+// ────────────────────── UI 事件 ──────────────────────
+document.addEventListener('input',e=>{if(e.target.id==='question-text')questionDraft.text=e.target.value;else if(/^question-[ABCD]$/.test(e.target.id))questionDraft[e.target.id.slice(-1)]=e.target.value});
+document.addEventListener('click',async e=>{const btn=e.target.closest('[data-action]');if(!btn||btn.disabled)return;let action=btn.dataset.action;if(action==='multi-pick'){const id=btn.dataset.poll,v=btn.dataset.value,p=currentPoll(),limit=id.startsWith('tie-')?p?.tieNeed||1:3;let old=localMulti[id]||[];old=old.includes(v)?old.filter(x=>x!==v):old.length<limit?[...old,v]:old;localMulti[id]=old;render();return}
+ if(action==='toggle-roster'){$('game-roster').dataset.open=$('game-roster').dataset.open==='1'?'0':'1';render();return}
+ btn.disabled=true;try{switch(action){
+ case 'create':await enter(true);break;
+ case 'join':await enter(false);break;
+ case 'retry-auth':await ensureAuth();$('setup-hint').textContent='背景識別已就緒，直接輸入暱稱與房號';$('retry-auth').hidden=true;break;
+ case 'copy-room':await navigator.clipboard.writeText(S.room);say('已複製房號');break;
+ case 'choose-team':await changeTeam(btn.dataset.side);break;
+ case 'assign-team':await assignTeam(btn.dataset.uid,btn.dataset.side);break;
+ case 'ready':await ready();break;
+ case 'set-captain':await captain(btn.dataset.side,btn.dataset.uid);break;
+ case 'rename':await rename(btn.dataset.side);break;
+ case 'kick':await kick(btn.dataset.uid);break;
+ case 'leave':await leave();break;
+ case 'disband':await disband();break;
+ case 'save-timer':await saveTimer();break;
+ case 'start-draft':await startDraft();break;
+ case 'start-battle':await startBattle();break;
+ case 'new-game':await newGame();break;
+ case 'open-card':await startCardVote();break;
+ case 'cast-vote':await vote(btn.dataset.value);break;
+ case 'submit-multi':await vote(localMulti[btn.dataset.poll]||[],true);break;
+ case 'tie-choice':await captainTie(btn.dataset.value);break;
+ case 'tie-submit':await captainTie(localMulti[`tie-${S.poll?.id}`]||[]);break;
+ case 'close-poll':await closePoll(true);break;
+ case 'open-question':await openQuestion();break;
+ case 'judge':await judge(btn.dataset.correct==='yes');break;
+ case 'forfeit-answer':{if(S.poll?.kind!=='answer'||eligibleIds(S.poll).length)throw Error('目前仍有可作答隊員');await changes({[`polls/${S.poll.id}/status`]:'closed'});await judge(false,true);break;}
+ case 'next-turn':await nextTurn();break;
+ case 'duel-open':await beginDuelQuestion();break;
+ case 'duel-answer':await voteDuel(btn.dataset.value);break;
+ case 'duel-judge':await duelJudge(btn.dataset.value);break;
+ case 'start-sudden':await startSudden();break;
+ case 'sudden-judge':await suddenJudge(btn.dataset.value);break;
+ case 'cancel-duel':{if(!isHost()||!['duelReady','duelAnswer','duelJudge'].includes(S.battle?.phase))throw Error('目前無法取消決鬥');const b=cp(S.battle);b.phase='awaitQuestion';b.duel=null;b.pending=null;b.pollId='';log(b,'主持人取消決鬥，卡牌未消耗，進入普通答題。');await set(R('battle'),b);break;}
+ }}catch(err){error(err,'操作未完成')}finally{btn.disabled=false}});
+$('retry-auth').addEventListener('click',async()=>{try{await ensureAuth();$('retry-auth').hidden=true;$('setup-hint').textContent='背景識別已連線。'}catch(e){error(e,'重新連線失敗')}});
+onAuthStateChanged(auth,async user=>{authReady=true;if(user){S.uid=user.uid;$('connection-dot').classList.add('ok');$('connection-status').textContent='已連線，玩家無須登入';$('setup-hint').textContent='已準備就緒：輸入暱稱及房號即可玩';$('retry-auth').hidden=true;await restoreSession()}else{$('connection-status').textContent='尚未建立背景身分';$('setup-hint').textContent='玩家無須帳密；按「建立／加入房間」時會自動連線。'}});
+// 函式匯出只供本機純邏輯驗收，正式網頁不依賴任何測試工具。
+if(typeof globalThis!=='undefined'&&globalThis.__EPB_TEST__)globalThis.__EPB_TEST__={CARDS,tally,computeOutcome,shieldAttack,initBattle,resolveCardId,revival};
+
+</script>
+</body>
+</html>
